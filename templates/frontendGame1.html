@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dmuchany Balon</title>
+  
+  <style>
+    body {
+      background-color: #87CEEB;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      
+    }
+
+   .balon-container {
+  position: relative;
+  animation:unoszenie 5s infinite ease-in-out, floatUp 3s linear forwards ;
+  z-index:15;
+  opacity: 1;
+	}
+
+@keyframes floatUp {
+            0% {
+                bottom: -600px;
+            }
+            100% {
+                bottom: 0px;
+            }
+        }
+
+@keyframes unoszenie {
+        0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-50px); /* Relatywne przesunięcie do góry */
+  }
+  100% {
+    transform: translateY(0); /* Powrót do oryginalnej pozycji */
+  }
+    }
+
+
+
+.balon {
+  width: 150px;
+  z-index: 10;
+  height: 200px;
+  background: radial-gradient(circle, #ff5f57, #e25f4f);
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  
+  transition: transform 1s;
+  transform: scale(0.7);
+}
+
+.otwor {
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 3px solid #e25f4f;
+}
+
+.sznurek {
+ position: absolute;
+  top: 177px; /* Ustaw sznurek pod balonem */
+  left: 57%; /* Wycentruj względem balona */
+  transform: translateX(-50%);
+  transition: top 1s ; 
+  z-index: 5;
+}
+
+.sznurek svg {
+  width: 50px;
+  height: 400px;
+}
+
+.sznurek path {
+  stroke: #333;
+  stroke-width: 3;
+  fill: none;
+  animation: falowanie 2s infinite ease-in-out;
+}
+
+@keyframes falowanie {
+  0%, 100% {
+    d: path("M0 0 Q5 20 0 40 T0 80 T0 120 T0 160");
+  }
+  50% {
+    d: path("M0 0 Q-5 20 0 40 T0 80 T0 120 T0 160");
+  }
+}
+
+.trojkat {
+      border-radius: 50%;
+      position: absolute;
+      top: 162px;
+      left: 50%;
+      transform: translateX(-50%) rotate(180deg);
+      z-index: 7;
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 20px solid #e25f4f;
+      transition: top 1s ; 
+}
+
+
+
+
+  
+ .bajka {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  z-index: 5;
+  animation: leczenie 5s forwards,zanikanie 5s forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-size: 12px;
+  color: #333;
+}
+
+.bajka img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%; /* Obrazki będą okrągłe */
+  object-fit: cover;  /* Dopasowanie obrazu w okręgu */
+  margin-bottom: 5px; /* Odstęp między obrazkiem a tekstem */
+   z-index: 7;
+}
+
+ .bajka span {
+     font-size: 10px; /* Zmniejsz czcionkę */
+  color: #333;
+  margin-top: -6px;
+  white-space: nowrap;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold; 
+  
+    }
+
+  @keyframes zanikanie {
+    0% {
+       opacity: 1; /* Pełna widoczność */
+    }
+    70% {
+       opacity: 1; /* Pełna widoczność */
+    }
+    80% {
+       opacity: 0; /* Pełna widoczność */
+    }
+    100% {
+       opacity: 0; /* Pełna widoczność */
+    }
+  }
+
+
+  @keyframes leczenie {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(var(--x), var(--y)); /* Przesunięcie dynamiczne */
+    }
+  }
+  
+   .piece {
+    	    left: 50%;
+    	    top: 50%;
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff5f57;
+            border-radius: 50%;
+            opacity: 1;
+            transform: scale(1);
+            border-radius: 50%;
+  		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            
+        }
+
+
+
+        @keyframes explode {
+            0% {
+        
+                transform: translate(0, 0);
+                opacity: 1;
+             
+            }
+             30% {
+                transform:  translate(var(--x), var(--y));
+                opacity: 1;
+                top:50%;
+               
+               }
+                
+            100% {
+                transform:  translate(var(--x), var(--y));
+                opacity: 0;
+                top:500%;
+            }
+           
+        }
+        
+        
+@keyframes unoszenieBoki {
+  0% {
+    left: 50%;
+  }
+
+  16% {
+    left: 60%;
+  }
+  
+  
+  66% {
+    left: 30%; /* Relatywne przesunięcie do góry */
+  }
+  
+  100% {
+    left: 50%; /* Powrót do oryginalnej pozycji */
+  }
+    }
+        
+    
+         @keyframes explode-ballon{
+            0% {
+                opacity: 1;
+
+            }
+           
+            100% {
+                opacity: 0;
+                transform: scale(10);
+            }
+        }
+
+  </style>
+</head>
+<body>
+ <div class="balon-container">
+  <div class="balon">
+    <div class="otwor"></div>
+    
+  </div>
+  <div class="trojkat"></div>
+  <div class="sznurek">
+    <svg viewBox="0 0 10 200">
+      <path d="M0 0 Q10 20 0 40 T0 80 T0 120 T0 160"></path>
+    </svg>
+  </div>
+</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
+  <script>
+   const socket = io();
+
+  // Funkcja tworząca i animująca bańkę
+ function createBubble(imageSrc,text) {
+    const bubble = document.createElement('div');
+    bubble.classList.add('bajka');
+
+    // Oblicz losowy punkt w promieniu wokół balona
+    const balloon = document.querySelector('.balon');
+    const balloonRect = balloon.getBoundingClientRect();
+    const radius = 450;
+
+	 // Dodaj obrazek do bańki
+	  const img = document.createElement('img');
+	  img.src = "/static/"+imageSrc;
+	  bubble.appendChild(img);
+
+	// Dodaj tekst pod obrazkiem
+	const textElement = document.createElement('span');
+    	textElement.textContent = text;
+   	bubble.appendChild(textElement);
+    // Losuj kąt i punkt początkowy bańki
+    const angle = Math.random() * Math.PI * 2;
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const startX = centerX + radius * Math.cos(angle);
+    const startY = centerY + radius * Math.sin(angle);
+
+    // Pozycjonuj bańkę w losowym punkcie
+    bubble.style.left = `${startX}px`;
+    bubble.style.top = `${startY}px`;
+
+    // Oblicz przesunięcie do centrum balonu
+
+
+    const deltaX = centerX - startX;
+    const deltaY = centerY - startY;
+
+    // Przekaż zmienne do CSS za pomocą właściwości --x i --y
+    bubble.style.setProperty('--x', `${deltaX}px`);
+    bubble.style.setProperty('--y', `${deltaY}px`);
+
+    document.body.appendChild(bubble);
+
+    // Usuń bańkę po zakończeniu animacji
+    bubble.addEventListener('animationend', () => {
+      bubble.remove();
+    });
+  }
+
+  // Obsługa zdarzenia "bombel" z backendu
+  socket.on('bombel', (data) => {
+    createBubble(data.image, data.text);
+  });
+
+  // Obsługa powiększania balona
+  socket.on('powieksz_balona', () => {
+     setTimeout(() => {
+    const balon = document.querySelector('.balon');
+    const sznurek = document.querySelector('.sznurek');
+    const trojkat = document.querySelector('.trojkat');
+    let scale = parseFloat(balon.style.transform.split('(')[1]?.split(')')[0] || 0.7);
+    scale += 0.025;
+    balon.style.transform = `scale(${scale})`;
+    // Oblicz nowe wymiary balona po skalowaniu
+    const newWidth = 150 * scale; // Szerokość balona
+    const newHeight = 99 * scale + 108; // Wysokość balona
+    // Zaktualizuj pozycję sznurka, aby był zawsze pod balonem
+    sznurek.style.top = `${newHeight}px`;
+    trojkat.style.top =  `${newHeight-14}px`
+    
+
+  }, 3000); // Opóźnienie 5 sekund (5000 ms)
+  
+  
+  });
+  
+  socket.on("boom",() => {triggerExplosion()});
+  
+  function triggerExplosion() {
+    const balon = document.querySelector('.balon');
+    const sznurek = document.querySelector('.sznurek');
+    const trojkat = document.querySelector('.trojkat');
+    const balonCont = document.querySelector('.balon-container');
+    const body = document.querySelector('body');
+    const pieces = [];
+    const numPieces = 400;
+    const balloonRect = balon.getBoundingClientRect(); // Pobierz rozmiar balona
+
+    
+    const balloonCenterX = window.innerWidth / 2;
+    const balloonCenterY = window.innerHeight / 2;
+
+    const radius = 950; // Promień wokół balona, w którym będą rozmieszczone kawałki
+
+    for (let i = 0; i < numPieces; i++) {
+        const piece = document.createElement('div');
+        piece.classList.add('piece');
+
+        // Losowy kąt w radianach
+        const angle = Math.random() * 2 * Math.PI; // Kąt w zakresie od 0 do 2π
+        // Losowy promień w obrębie określonego promienia (radius)
+        const randomRadius = Math.random() * radius + 50;
+
+        // Oblicz nowe współrzędne na okręgu
+        const x = balloonCenterX + randomRadius * Math.cos(angle);
+        const y = balloonCenterY + randomRadius * Math.sin(angle);
+
+        // Ustawienia animacji
+
+        piece.style.setProperty('--x', `${x - balloonCenterX}px`);
+        piece.style.setProperty('--y', `${y - balloonCenterY}px`);
+
+        pieces.push(piece);
+        body.parentNode.appendChild(piece);
+
+        // Ustaw animację eksplozji
+        piece.style.animation = 'explode 5s ease-out forwards';
+        balonCont.style.animation = 'explode-ballon 0.5s ease-out forwards';
+    }//unoszenieBoki 3s infinite ease-in-out,
+
+    setTimeout(() => {
+        pieces.forEach(p => p.remove());
+        balonCont.remove();
+        spawnNewBalloon();
+    }, 3000);
+  }
+
+  function spawnNewBalloon() {
+    const body = document.querySelector('body');
+
+    // Tworzenie nowego kontenera balona
+    const newContainer = document.createElement('div');
+    newContainer.classList.add('balon-container');
+    body.appendChild(newContainer);
+
+    // Tworzenie nowego balona
+    const newBalon = document.createElement('div');
+    newBalon.classList.add('balon');
+    newBalon.innerHTML = `<div class="otwor"></div>`;
+    newContainer.appendChild(newBalon);
+
+    // Tworzenie nowego trójkąta
+    const newTrojkat = document.createElement('div');
+    newTrojkat.classList.add('trojkat');
+    newContainer.appendChild(newTrojkat);
+
+    // Tworzenie nowego sznurka
+    const newSznurek = document.createElement('div');
+    newSznurek.classList.add('sznurek');
+    newSznurek.innerHTML = `<svg viewBox="0 0 10 200"><path d="M0 0 Q10 20 0 40 T0 80 T0 120 T0 160"></path></svg>`;
+    newContainer.appendChild(newSznurek);
+}
+  </script>
+</body>
+</html>
+
+
