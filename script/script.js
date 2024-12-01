@@ -2,7 +2,7 @@
 const socket = io();
 
 // Funkcja tworząca i animująca bańkę
-function createBubble(imageSrc, text, balloonId) {
+function createBubble(imageSrc, text, balloonId, sizepic) {
   const bubble = document.createElement('div');
   bubble.classList.add('bajka');
 
@@ -10,12 +10,11 @@ function createBubble(imageSrc, text, balloonId) {
   const radius = 450;
 
   // Dodaj obrazek do bańki
-
-
   const img = document.createElement('img');
   img.src = "/static/" + imageSrc;
   bubble.appendChild(img);
-
+  img.style.width = `${sizepic}px`;
+  img.style.height = `${sizepic}px`;
   // Dodaj tekst pod obrazkiem
   const textElement = document.createElement('span');
   textElement.textContent = text;
@@ -84,29 +83,29 @@ function createBubble(imageSrc, text, balloonId) {
 }
 
 // Obsługa zdarzenia "bombel" z backendu
-socket.on('bombel2', (data) => {
-  createBubble(data.image, data.text, "balon-niebieski");
+socket.on('bombelBLUE', (data) => {
+  createBubble(data.image, data.text, "balon-niebieski", data.size);
 });
-socket.on('bombel1', (data) => {
-  createBubble(data.image, data.text, "balon-czerwony");
-});
-
-socket.on('powieksz_balonaRED', () => {
-  powiekszBalon('balon-czerwony');
+socket.on('bombelRED', (data) => {
+  createBubble(data.image, data.text, "balon-czerwony", data.size);
 });
 
-socket.on('powieksz_balonaBLUE', () => {
-  powiekszBalon('balon-niebieski');
+socket.on('powieksz_balonaRED', (data) => {
+  powiekszBalon('balon-czerwony', data.size);
 });
 
-function powiekszBalon(balonId) {
+socket.on('powieksz_balonaBLUE', (data) => {
+  powiekszBalon('balon-niebieski', data.size);
+});
+
+function powiekszBalon(balonId, size) {
   setTimeout(() => {
     const balloncontainer = document.querySelector(`#${balonId}`);
     const balon = document.querySelector(`#${balonId} .balon`);
     const sznurek = document.querySelector(`#${balonId} .sznurek`);
     const trojkat = document.querySelector(`#${balonId} .trojkat`);
     let scale = parseFloat(balon.style.transform.split('(')[1]?.split(')')[0] || 0.7);
-    scale += 0.01;
+    scale += size / 1000;
     balon.style.transform = `scale(${scale})`;
     //balon.style.zIndex = "";
     balloncontainer.style.zIndex = 10 + 1000 * scale;
@@ -116,32 +115,44 @@ function powiekszBalon(balonId) {
   }, 3000)
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  // Słuchacz zdarzenia do zmiany na niebieski
-  socket.on('zmien_na_niebieski', function () {
-    zmienKąt(180);  // Przejście na kąt 190 stopni w 5 sekund
-  });
-
-  // Słuchacz zdarzenia do zmiany na czerwony
-  socket.on('zmien_na_czerwony', function () {
-    zmienKąt(180);  // Przejście na kąt 10 stopni w 5 sekund
-  });
+socket.on('zmien_na_kat', (data) => {
+  setKąt(data.kat);
 });
+
+// Słuchacz zdarzenia do zmiany na czerwony
+socket.on('przesun_o_i_w', (data) => {
+  zmienKąt(data.kat, data.czas);  // Przejście na kąt 10 stopni w 5 sekund
+});
+
 godzina = 10;
 
-function zmienKąt(kąt) {
-  const wskazówka = document.querySelector('.hour-hand');
-  wskazówka.style.transform = `rotate(${godzina + kąt / 2 - 10}deg)`;  // Płynne przejście
-  // Uruchamiamy animację
-  setTimeout(() => {
-    //wskazówka.style.transition = 'transform 5s ease-in-out';  // Ponownie dodajemy animację
-    wskazówka.style.transform = `rotate(${godzina + kąt}deg)`;
-    godzina = godzina + 180;  // Płynne przejście
-  }, 5000);  // Małe opóźnienie dla restartu animacji
+function zmienKąt(kąt, czas) {
 
+  const wskazówka = document.querySelector('.hour-hand');
+  wskazówka.style.transition = `transform ${czas}ms linear`;
+  wskazówka.style.transform = `rotate(${godzina + kąt}deg)`;  // Płynne przejście
+  // Uruchamiamy animację
+  godzina = (godzina + kąt);
+  if (godzina > 36000) {
+    setTimeout(() => {
+      wskazówka.style.transition = `transform 0ms linear`;
+      wskazówka.style.transform = `rotate(${godzina % 360}deg)`;  // Płynne przejście
+      godzina = godzina % 360;
+    }, czas);
+  }
 }
 
-socket.on("boom1", () => {
+function setKąt(kąt) {
+  godzina = kąt % 360
+  const wskazówka = document.querySelector('.hour-hand');
+  wskazówka.style.transition = `transform 1ms linear`;
+  wskazówka.style.transform = `rotate(${godzina}deg)`;
+}
+
+
+
+
+socket.on("boomRED", () => {
   const balonCont = document.querySelector(`#balon-niebieski`);
   if (!balonCont) {
     console.error(`Balon z ID "#balon-niebieski" nie istnieje.`);
@@ -158,7 +169,7 @@ socket.on("boom1", () => {
   }, 3000)
 
 });
-socket.on("boom2", () => {
+socket.on("boomBLUE", () => {
   const balonCont = document.querySelector(`#balon-czerwony`);
   if (!balonCont) {
     console.error(`Balon z ID "#balon-czerwony" nie istnieje.`);

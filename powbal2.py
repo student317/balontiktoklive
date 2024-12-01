@@ -15,28 +15,28 @@ def serve_script(filename):
 
 def powieksz_balonaRED():
     # Wysyłanie komunikatu do klienta do powiększenia balona
-    socketio.emit('powieksz_balonaRED')
+    socketio.emit('powieksz_balonaRED',{'size': 10})
 
     text_choice = "Napis pod obrazkiem"  # Możesz dodać dynamiczne napisy
-    socketio.emit('bombel1', {'image': "download.jpg", 'text': text_choice})
+    socketio.emit('bombelRED', {'image': "download.jpg", 'text': text_choice, 'size':20})
 
 def powieksz_balonaBLUE():
     # Wysyłanie komunikatu do klienta do powiększenia balona
-    socketio.emit('powieksz_balonaBLUE')
+    socketio.emit('powieksz_balonaBLUE',{'size': 10})
 
     text_choice = "Napis pod obrazkiem"  # Możesz dodać dynamiczne napisy
-    socketio.emit('bombel2', {'image': "download.jpg", 'text': text_choice})
+    socketio.emit('bombelBLUE', {'image': "download.jpg", 'text': text_choice, 'size':30})
 
 
 def on_press(key):
     if hasattr(key, 'char') and key.char == 'z':
-                socketio.emit('zmien_na_niebieski')
+                socketio.emit('zmien_na_kat',{'kat':180})
     if hasattr(key, 'char') and key.char == 'x':
-                socketio.emit('zmien_na_czerwony')
+                socketio.emit('przesun_o_i_w',{'kat':180,'czas':1000})
     if hasattr(key, 'char') and key.char == 'a':
-            socketio.emit('boom1')
+            socketio.emit('boomRED')
     if hasattr(key, 'char') and key.char == 's':
-            socketio.emit('boom2')
+            socketio.emit('boomBLUE')
     if hasattr(key, 'char') and key.char == 'd':
             powieksz_balonaRED()
     if key == keyboard.Key.space:    
